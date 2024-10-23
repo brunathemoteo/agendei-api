@@ -1,11 +1,22 @@
 import db from "../database/db.js";
 
-async function getDoctors() {
-	const sql = "SELECT * FROM doctors ORDER BY name";
-	const doctors = await db.query(sql, []);
-	return doctors.recordset;
-}
+async function getDoctors(name) {
+	let sql = "SELECT * FROM doctors ";
 
+    if (name) {
+        sql += "WHERE name LIKE @name "
+    }
+
+    sql += "ORDER BY name";
+
+    try {
+        const doctors = await db.query(sql, {name: `%${name}%`});
+        return doctors.recordset;
+    } catch (error) {
+        console.log("Erro ao obter médicos: ", error);
+        throw error;
+    }
+}
 
 async function deleteDoctor(doctorID) {
     try {
