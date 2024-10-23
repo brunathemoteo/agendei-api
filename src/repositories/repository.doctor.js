@@ -86,4 +86,6 @@ async function updateDoctor(doctorID, name, specialty, icon) {
     }
 }
 
+//teste
+
 export default { getDoctors, createDoctor, deleteDoctor, updateDoctor };
