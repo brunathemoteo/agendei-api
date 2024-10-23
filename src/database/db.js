@@ -31,18 +31,20 @@ async function query(command, params = {}) {
         try {
             const pool = await connectToDatabase(); 
             const request = pool.request(); 
-            
-            for (const key in params) {
-                request.input(key, params[key]); 
-            }
 
+            if (typeof params === 'object' && params !== null) {
+				for (const key in params) {
+					request.input(key, typeof params[key] === 'string' ? sql.VarChar : sql.Int, params[key]);
+				}
+			}
+			
             const result = await request.query(command); 
             resolve(result);
         } catch (error) {
+			console.error("Erro na consulta:", error);
             reject(error);
         }
     });
 }
-
 
 export default { connectToDatabase, query };

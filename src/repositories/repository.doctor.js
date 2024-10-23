@@ -6,4 +6,73 @@ async function getDoctors() {
 	return doctors.recordset;
 }
 
-export default { getDoctors };
+
+async function deleteDoctor(doctorID) {
+    try {
+        if (!doctorID) {
+            throw new Error("Doctor ID must be provided");
+        }
+
+        const sql = `DELETE FROM Doctors WHERE id_doctor = @id`;
+        const result = await db.query(sql, { id: doctorID });
+
+        if (result.rowsAffected[0] === 0) {
+            return null;
+        }
+
+        return { doctorID };
+    } catch (error) {
+        console.log("Erro ao executar a consulta delete doctor: ", error);
+        throw error;
+    }
+}
+
+async function createDoctor(name, specialty, icon) {
+    try {
+        const sql = `
+            INSERT INTO Doctors (name, specialty, icon) VALUES (@name, @specialty, @icon);
+            SELECT SCOPE_IDENTITY() AS id_doctor;
+        `;
+        const result = await db.query(sql, { name, specialty, icon });
+
+        if (result.rowsAffected[0] === 0) {
+            return null; 
+        }
+
+        return { id: result.recordset[0]?.id_doctor }; 
+    } catch (error) {
+        console.log("Erro ao executar a consulta create doctor: ", error);
+        throw error;
+    }
+}
+
+async function updateDoctor(doctorID, name, specialty, icon) {
+    try {
+        if (!doctorID) {
+            throw new Error("Doctor ID must be provided");
+        }
+
+        const sql = `
+            UPDATE Doctors 
+            SET name = @name, specialty = @specialty, icon = @icon 
+            WHERE id_doctor = @id
+        `;
+        const result = await db.query(sql, { 
+            id: doctorID, 
+            name: name || "", 
+            specialty: specialty || "", 
+            icon: icon || "" 
+        });
+
+        if (result.rowsAffected[0] === 0) {
+            return null;
+        }
+
+        return { doctorID, message: 'Doctor updated successfully' };
+    } catch (error) {
+        console.log("Erro ao executar a consulta update doctor: ", error);
+        throw error;
+    }
+}
+
+export default { getDoctors, createDoctor, deleteDoctor, updateDoctor };
