@@ -17,9 +17,22 @@ async function createUser(req, res){
         
     } catch (error) {
         console.log("Erro ao criar usuario: ", error);
-        res.status(500).json({ message: "An error occurred while creating the user." });
+        return res.status(500).json({ message: "An error occurred while creating the user." });
     }
 
 }
 
-export default {createUser};
+async function loginUser(req, res) {
+    const {email, password} = req.body;
+
+    const user = await serviceUser.loginUser(email, password);
+
+    if (user.length == 0){
+        return res.status(401).json({error: "Email ou senha inválida"});
+    }
+
+    return res.status(200).json(user)
+}
+
+
+export default {createUser, loginUser};

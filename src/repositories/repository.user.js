@@ -34,4 +34,11 @@ async function createUser(name, email, password) {
         throw error;
     }
 }
-    export default {createUser};
+
+async function findUserByEmail(email) {
+    const sql = `SELECT password FROM Users WHERE email = @Email`;
+    const result = await db.query(sql, { Email: email });
+    return result.recordset.length > 0 ? result.recordset[0] : null; 
+}
+
+export default {createUser, findUserByEmail};

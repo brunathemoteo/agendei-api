@@ -10,5 +10,6 @@ router.put("/doctors/:id_doctor", controllerDoctor.updateDoctor);
 router.delete("/doctors/:id_doctor", controllerDoctor.deleteDoctor);
 
 router.post("/user/register", controllerUser.createUser);
+router.post("/users/login", controllerUser.loginUser);
 
 export default router;
