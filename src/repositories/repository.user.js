@@ -15,7 +15,7 @@ async function createUser(name, email, password) {
     try {
         const emailExists = await checkEmailExists(email);
         if (emailExists) {
-            return { error: "O e-mail já está cadastrado." }; // Retorna uma mensagem de erro
+            return { error: "O e-mail já está cadastrado." }; 
         }
 
         const sql = `INSERT INTO Users (name, email, password) 
@@ -36,7 +36,7 @@ async function createUser(name, email, password) {
 }
 
 async function findUserByEmail(email) {
-    const sql = `SELECT password FROM Users WHERE email = @Email`;
+    const sql = `SELECT * FROM Users WHERE email = @Email`;
     const result = await db.query(sql, { Email: email });
     return result.recordset.length > 0 ? result.recordset[0] : null; 
 }

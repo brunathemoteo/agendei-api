@@ -6,6 +6,7 @@ async function createUser (name, email, password) {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const user = await repositoryUser.createUser(name, email, hashPassword);
+    user.token = "00000000001234";
     return user;
 }
 
@@ -21,8 +22,10 @@ async function loginUser(email, password) {
         if (!isMatch) {
             return { error: "Senha incorreta." };
         }
+        user.token = "00000000001234";
+        const { password: _, ...userWithoutPassword } = user;
+        return userWithoutPassword; 
 
-        return { message: "Login bem-sucedido!", user: { email } }; 
     } catch (error) {
         console.log("Erro ao executar a query de login: ", error);
         throw error;
