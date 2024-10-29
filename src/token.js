@@ -11,11 +11,25 @@ function createToken(id_user) {
 }
 
 function validateToken(req, res, next){
-    const authToken = req.headers.authorization;
+    const authToken = req.headers.authorization; // "Bearer 00000000"
 
     if(!authToken) {
         return res.status(401).json({error: "Token não informado"});
     }
+
+    const [bearer, token] = authToken.split(" "); // "Bearer" "00000000"
+
+    jwt.verify(token, secretKey, (err, tokenDecoded) => {
+        
+        if (err){
+            return res.status(401).json({error: "Token inválido"});
+        }
+
+        req.id_user = tokenDecoded.id_user;
+
+        next();
+
+    })
 
 }
 

@@ -1,12 +1,14 @@
 import repositoryUser from "../repositories/repository.user.js"
 import bcrypt from "bcrypt";
+import jwt from "../token.js";
 
 async function createUser (name, email, password) {
 
     const hashPassword = await bcrypt.hash(password, 10);
-
     const user = await repositoryUser.createUser(name, email, hashPassword);
-    user.token = "00000000001234";
+
+    user.token = jwt.createToken(user.id_user);
+
     return user;
 }
 
@@ -22,7 +24,9 @@ async function loginUser(email, password) {
         if (!isMatch) {
             return { error: "Senha incorreta." };
         }
-        user.token = "00000000001234";
+
+        user.token = jwt.createToken(user.id_user);
+
         const { password: _, ...userWithoutPassword } = user;
         return userWithoutPassword; 
 
