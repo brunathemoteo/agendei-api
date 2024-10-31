@@ -25,4 +25,9 @@ async function updateDoctor(doctorID, name, specialty, icon){
 	return result;
 }
 
-export default { listDoctors, createDoctor, deleteDoctor, updateDoctor };
+async function listDoctorsServices(id_doctor) {
+	const services = await repositoryDoctor.listDoctorsServices(id_doctor);
+	return services;
+}
+
+export default { listDoctors, createDoctor, deleteDoctor, updateDoctor, listDoctorsServices };

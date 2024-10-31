@@ -86,6 +86,20 @@ async function updateDoctor(doctorID, name, specialty, icon) {
     }
 }
 
-//teste
+async function listDoctorsServices(id_doctor) {
+	let sql = `SELECT d.id_service, s.description, d.price
+                FROM Doctors_Services as d
+                JOIN Services AS s ON d.id_service = s.id_service
+                WHERE d.id_doctor = @id
+                ORDER BY s.description`
 
-export default { getDoctors, createDoctor, deleteDoctor, updateDoctor };
+    try {
+        const services = await db.query(sql, {id: id_doctor});
+        return services.recordset[0];
+    } catch (error) {
+        console.log("Erro ao obter serviços: ", error);
+        throw error;
+    }
+}
+
+export default { getDoctors, createDoctor, deleteDoctor, updateDoctor, listDoctorsServices };

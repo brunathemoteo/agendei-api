@@ -6,6 +6,7 @@ async function listDoctors(req, res) {
     const doctors = await serviceDoctor.listDoctors(name);
 	res.status(200).json(doctors);
 }
+
 async function createDoctor(req, res) {
     const { name, specialty, icon } = req.body;
 
@@ -69,4 +70,11 @@ async function updateDoctor(req, res) {
     }
 }
 
-export default { listDoctors, createDoctor, deleteDoctor, updateDoctor };
+async function listDoctorsServices(req, res) {
+
+	const id_doctor = req.params.id_doctor;
+    const services = await serviceDoctor.listDoctorsServices(id_doctor);
+	res.status(200).json(services);
+}
+
+export default { listDoctors, createDoctor, deleteDoctor, updateDoctor, listDoctorsServices };
