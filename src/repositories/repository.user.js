@@ -41,4 +41,12 @@ async function findUserByEmail(email) {
     return result.recordset.length > 0 ? result.recordset[0] : null; 
 }
 
-export default {createUser, findUserByEmail};
+async function profile(id_user) {
+    
+    let sql = `SELECT id_user, name, email FROM Users WHERE id_user = @id`
+
+    const userProfile = await db.query(sql, {id: id_user});
+    return userProfile.recordset[0];
+
+}
+export default {createUser, findUserByEmail, profile};

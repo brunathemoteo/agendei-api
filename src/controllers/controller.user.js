@@ -1,3 +1,4 @@
+import serviceAppointment from "../services/service.appointment.js";
 import serviceUser from "../services/service.user.js"
 
 async function createUser(req, res){
@@ -34,5 +35,11 @@ async function loginUser(req, res) {
     return res.status(200).json(user)
 }
 
+async function profile(req, res) {
+    const id_user = req.id_user;
+    const user = await serviceUser.profile(id_user);
 
-export default {createUser, loginUser};
+    res.status(200).json(user);
+}
+
+export default {createUser, loginUser, profile };

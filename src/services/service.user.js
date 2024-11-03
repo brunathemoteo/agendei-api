@@ -36,4 +36,9 @@ async function loginUser(email, password) {
     }
 }
 
-export default {createUser, loginUser};
+async function profile(id_user) {
+    const user = await repositoryUser.profile(id_user);
+    return user;
+}
+
+export default {createUser, loginUser, profile};
