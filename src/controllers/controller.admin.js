@@ -1,6 +1,6 @@
-import serviceUser from '../services/service.user.js';
+import serviceAdmin from '../services/service.admin.js';
 
-async function createUser(req, res) {
+async function createUserAdmin(req, res) {
 	const { name, email, password } = req.body;
 
 	if (!name || !email || !password) {
@@ -8,7 +8,7 @@ async function createUser(req, res) {
 	}
 
 	try {
-		const user = await serviceUser.createUser(name, email, password);
+		const user = await serviceAdmin.createUserAdmin(name, email, password);
 		if (!user) {
 			return res.status(400).json({ message: 'User could not be created.' });
 		}
@@ -19,10 +19,10 @@ async function createUser(req, res) {
 	}
 }
 
-async function loginUser(req, res) {
+async function loginAdmin(req, res) {
 	const { email, password } = req.body;
 
-	const user = await serviceUser.loginUser(email, password);
+	const user = await serviceAdmin.loginAdmin(email, password);
 
 	if (!user || user.error) {
 		return res.status(401).json({ error: user ? user.error : 'Email ou senha inválidos.' });
@@ -31,11 +31,14 @@ async function loginUser(req, res) {
 	return res.status(200).json(user);
 }
 
-async function profile(req, res) {
-	const id_user = req.id_user;
-	const user = await serviceUser.profile(id_user);
-
-	res.status(200).json(user);
+async function listAppointments(req, res) {
+	try {
+		const appointments = await serviceAdmin.listAppointments();
+		res.status(200).json(appointments);
+	} catch (error) {
+		console.error('Erro ao listar agendamentos:', error);
+		res.status(500).json({ message: 'An error occurred' });
+	}
 }
 
-export default { createUser, loginUser, profile };
+export default { createUserAdmin, loginAdmin, listAppointments };

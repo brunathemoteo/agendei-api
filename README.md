@@ -1,2 +1,2 @@
-# agendei-fullstack
+# Agendei API
 Sistema para agendamento de consultas médicas
