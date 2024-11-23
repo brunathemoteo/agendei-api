@@ -43,4 +43,13 @@ async function listAppointments() {
 	}
 }
 
-export default { createUserAdmin, loginAdmin, listAppointments };
+async function listUsers() {
+	try {
+		return await repositoryAdmin.listUsers();
+	} catch (error) {
+		console.error('Erro:', error);
+		throw new Error('Erro ao processar a listagem de usuários.');
+	}
+}
+
+export default { createUserAdmin, loginAdmin, listAppointments, listUsers };
