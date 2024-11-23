@@ -66,4 +66,16 @@ async function listAppointments() {
 	}
 }
 
-export default { createUserAdmin, findUserByEmailAdmin, listAppointments };
+async function listUsers() {
+	try {
+		const sql = 'SELECT id_user, name, email from Users';
+
+		const users = await db.query(sql);
+		return users.recordset;
+	} catch (error) {
+		console.log('Erro ao obter consulta de usuários: ', error);
+		throw error;
+	}
+}
+
+export default { createUserAdmin, findUserByEmailAdmin, listAppointments, listUsers };
