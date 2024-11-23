@@ -28,6 +28,9 @@ router.delete('/appointments/:id_appointment', jwt.validateToken, controllerAppo
 router.post('/admin/register', controllerAdmin.createUserAdmin);
 router.post('/admin/login', controllerAdmin.loginAdmin);
 router.get('/admin/appointments', jwt.validateToken, controllerAdmin.listAppointments);
-router.get('/admin/users', jwt.validateToken, controllerAdmin.listAppointments);
+router.get('/admin/users', jwt.validateToken, controllerAdmin.listUsers);
+router.get('/admin/appointments/:id_appointment', jwt.validateToken, controllerAppointment.listById);
+router.post('/admin/appointments', jwt.validateToken, controllerAppointment.createAppointmentAdmin);
+router.put('/admin/appointments/:id_appointment', jwt.validateToken, controllerAppointment.editAppointmentAdmin);
 
 export default router;
