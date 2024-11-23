@@ -41,4 +41,10 @@ async function listAppointments(req, res) {
 	}
 }
 
-export default { createUserAdmin, loginAdmin, listAppointments };
+async function listUsers(req, res) {
+	const users = await serviceAdmin.listUsers();
+
+	res.status(200).json(users);
+}
+
+export default { createUserAdmin, loginAdmin, listAppointments, listUsers };

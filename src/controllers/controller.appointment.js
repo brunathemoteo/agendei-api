@@ -11,12 +11,49 @@ async function listByUser(req, res) {
 	}
 }
 
+async function listById(req, res) {
+	try {
+		const id_appointment = req.params.id_appointment;
+		const appointments = await serviceAppointment.listById(id_appointment);
+		res.status(200).json(appointments);
+	} catch (error) {
+		console.error('Erro ao listar agendamento:', error);
+		res.status(500).json({ message: 'Error no servidor' });
+	}
+}
+
 async function createAppointment(req, res) {
 	const id_user = req.id_user;
 	const { id_doctor, id_service, booking_date, booking_hour } = req.body;
 
 	const appointment = await serviceAppointment.createAppointment(id_user, id_doctor, id_service, booking_date, booking_hour);
 	res.status(201).json(appointment);
+}
+
+async function createAppointmentAdmin(req, res) {
+	const { id_user, id_doctor, id_service, booking_date, booking_hour } = req.body;
+
+	const appointment = await serviceAppointment.createAppointment(id_user, id_doctor, id_service, booking_date, booking_hour);
+	res.status(201).json(appointment);
+}
+
+async function editAppointmentAdmin(req, res) {
+	const { id_user, id_doctor, id_service, booking_date, booking_hour } = req.body;
+	const id_appointment = req.params.id_appointment;
+
+	if (!id_appointment) {
+		return res.status(400).json({ message: 'Appointment ID is required.' });
+	}
+	try {
+		const updateAppointment = await serviceAppointment.editAppointmentAdmin(id_appointment, id_user, id_doctor, id_service, booking_date, booking_hour);
+		if (!updateAppointment) {
+			return res.status(404).json({ message: 'Appointment not found.' });
+		}
+		res.status(200).json(updateAppointment);
+	} catch (error) {
+		console.error('Erro ao atualizar agendamento:', error);
+		res.status(500).json({ error: 'Não foi possível editar o agendamento.' });
+	}
 }
 
 async function deleteAppointment(req, res) {
@@ -36,4 +73,4 @@ async function deleteAppointment(req, res) {
 	}
 }
 
-export default { listByUser, createAppointment, deleteAppointment };
+export default { listByUser, createAppointment, deleteAppointment, listById, editAppointmentAdmin, createAppointmentAdmin };
