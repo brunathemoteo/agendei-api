@@ -11,7 +11,7 @@ async function checkEmailExists(email) {
 	}
 }
 
-async function createUserAdmin(name, email, password) {
+async function createAdmin(name, email, password) {
 	try {
 		const emailExists = await checkEmailExists(email);
 		if (emailExists) {
@@ -41,7 +41,7 @@ async function findUserByEmailAdmin(email) {
 	return result.recordset.length > 0 ? result.recordset[0] : null;
 }
 
-async function listAppointments() {
+async function listAllAppointments() {
 	const sql = `SELECT a.id_appointment, 
                         s.description AS service, 
                         d.name AS doctor, 
@@ -66,7 +66,7 @@ async function listAppointments() {
 	}
 }
 
-async function listUsers() {
+async function listAllUsers() {
 	try {
 		const sql = 'SELECT id_user, name, email from Users';
 
@@ -78,4 +78,4 @@ async function listUsers() {
 	}
 }
 
-export default { createUserAdmin, findUserByEmailAdmin, listAppointments, listUsers };
+export default { createAdmin, findUserByEmailAdmin, listAllAppointments, listAllUsers };

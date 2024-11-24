@@ -1,9 +1,9 @@
 import serviceAppointment from '../services/service.appointment.js';
 
-async function listByUser(req, res) {
+async function listAppointmentsByUser(req, res) {
 	try {
 		const userId = req.id_user;
-		const appointments = await serviceAppointment.listByUser(userId);
+		const appointments = await serviceAppointment.listAppointmentsByUser(userId);
 		res.status(200).json(appointments);
 	} catch (error) {
 		console.error('Erro ao listar agendamentos:', error);
@@ -11,10 +11,10 @@ async function listByUser(req, res) {
 	}
 }
 
-async function listById(req, res) {
+async function getAppointmentDetails(req, res) {
 	try {
-		const id_appointment = req.params.id_appointment;
-		const appointments = await serviceAppointment.listById(id_appointment);
+		const idAppointment = req.params.idAppointment;
+		const appointments = await serviceAppointment.getAppointmentDetails(idAppointment);
 		res.status(200).json(appointments);
 	} catch (error) {
 		console.error('Erro ao listar agendamento:', error);
@@ -39,13 +39,13 @@ async function createAppointmentAdmin(req, res) {
 
 async function editAppointmentAdmin(req, res) {
 	const { id_user, id_doctor, id_service, booking_date, booking_hour } = req.body;
-	const id_appointment = req.params.id_appointment;
+	const idAppointment = req.params.idAppointment;
 
-	if (!id_appointment) {
+	if (!idAppointment) {
 		return res.status(400).json({ message: 'Appointment ID is required.' });
 	}
 	try {
-		const updateAppointment = await serviceAppointment.editAppointmentAdmin(id_appointment, id_user, id_doctor, id_service, booking_date, booking_hour);
+		const updateAppointment = await serviceAppointment.editAppointmentAdmin(idAppointment, id_user, id_doctor, id_service, booking_date, booking_hour);
 		if (!updateAppointment) {
 			return res.status(404).json({ message: 'Appointment not found.' });
 		}
@@ -56,15 +56,21 @@ async function editAppointmentAdmin(req, res) {
 	}
 }
 
-async function deleteAppointment(req, res) {
+async function cancelAppointment(req, res) {
 	try {
 		const id_user = req.id_user;
-		const id_appointment = req.params.id_appointment;
+		const idAppointment = req.params.idAppointment;
 
-		const appointment = await serviceAppointment.deleteAppointment(id_user, id_appointment);
+		if (!id_user || !idAppointment) {
+			return res.status(400).json({ message: 'Dados incompletos' });
+		}
+
+		const appointment = await serviceAppointment.cancelAppointment(id_user, idAppointment);
 
 		if (appointment) {
-			return res.status(200).json({ message: 'Agendamento deletado com sucesso' });
+			return res.status(200).json({
+				message: `Agendamento deletado com sucesso. Id appointment: ${idAppointment}`,
+			});
 		}
 		return res.status(404).json({ message: 'Agendamento não encontrado' });
 	} catch (error) {
@@ -73,4 +79,4 @@ async function deleteAppointment(req, res) {
 	}
 }
 
-export default { listByUser, createAppointment, deleteAppointment, listById, editAppointmentAdmin, createAppointmentAdmin };
+export default { listAppointmentsByUser, createAppointment, cancelAppointment, getAppointmentDetails, editAppointmentAdmin, createAppointmentAdmin };

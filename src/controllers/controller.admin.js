@@ -1,6 +1,6 @@
 import serviceAdmin from '../services/service.admin.js';
 
-async function createUserAdmin(req, res) {
+async function createAdmin(req, res) {
 	const { name, email, password } = req.body;
 
 	if (!name || !email || !password) {
@@ -8,7 +8,7 @@ async function createUserAdmin(req, res) {
 	}
 
 	try {
-		const user = await serviceAdmin.createUserAdmin(name, email, password);
+		const user = await serviceAdmin.createAdmin(name, email, password);
 		if (!user) {
 			return res.status(400).json({ message: 'User could not be created.' });
 		}
@@ -31,9 +31,9 @@ async function loginAdmin(req, res) {
 	return res.status(200).json(user);
 }
 
-async function listAppointments(req, res) {
+async function listAllAppointments(req, res) {
 	try {
-		const appointments = await serviceAdmin.listAppointments();
+		const appointments = await serviceAdmin.listAllAppointments();
 		res.status(200).json(appointments);
 	} catch (error) {
 		console.error('Erro ao listar agendamentos:', error);
@@ -41,10 +41,10 @@ async function listAppointments(req, res) {
 	}
 }
 
-async function listUsers(req, res) {
-	const users = await serviceAdmin.listUsers();
+async function listAllUsers(req, res) {
+	const users = await serviceAdmin.listAllUsers();
 
 	res.status(200).json(users);
 }
 
-export default { createUserAdmin, loginAdmin, listAppointments, listUsers };
+export default { createAdmin, loginAdmin, listAllAppointments, listAllUsers };

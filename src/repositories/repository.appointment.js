@@ -1,6 +1,6 @@
 import db from '../database/db.js';
 
-async function listByUser(userId) {
+async function listAppointmentsByUser(userId) {
 	const sql = `SELECT a.id_appointment, 
                         s.description AS service, 
                         d.name AS doctor, 
@@ -26,7 +26,7 @@ async function listByUser(userId) {
 	}
 }
 
-async function listById(id_appointment) {
+async function getAppointmentDetails(idAppointment) {
 	const sql = `SELECT a.id_appointment, 
 						a.id_service,
                         s.description AS service, 
@@ -46,7 +46,7 @@ async function listById(id_appointment) {
                     WHERE a.id_appointment = @id`;
 
 	try {
-		const appointments = await db.query(sql, { id: id_appointment });
+		const appointments = await db.query(sql, { id: idAppointment });
 		return appointments.recordset[0];
 	} catch (error) {
 		console.log('Erro ao obter consultas: ', error);
@@ -75,17 +75,22 @@ async function createAppointment(id_user, id_doctor, id_service, booking_date, b
 	}
 }
 
-async function deleteAppointment(id_user, id_appointment) {
+async function cancelAppointment(id_user, idAppointment) {
 	const sql = `DELETE FROM Appointments 
-                    WHERE id_appointment = @id_a and id_user = @id_u`;
+                    WHERE id_appointment = @idAppointment and id_user = @id_u`;
 
-	await db.query(sql, { id_a: id_appointment, id_u: id_user });
-	return { id_appointment };
+	try {
+		await db.query(sql, { idAppointment, id_u: id_user });
+		return { idAppointment };
+	} catch (error) {
+		console.error('Erro ao cancelar a consulta:', error);
+		throw new Error('Falha ao cancelar a consulta.');
+	}
 }
 
-async function editAppointmentAdmin(id_appointment, userID, doctorID, serviceID, bookingDate, bookingHour) {
+async function editAppointmentAdmin(idAppointment, userID, doctorID, serviceID, bookingDate, bookingHour) {
 	try {
-		if (!id_appointment) {
+		if (!idAppointment) {
 			throw new Error('Appointment ID must be provided');
 		}
 
@@ -98,11 +103,11 @@ async function editAppointmentAdmin(id_appointment, userID, doctorID, serviceID,
 				booking_date = @bookingDate,
 				booking_hour = @bookingHour
 			WHERE 
-				id_appointment = @id_appointment
+				id_appointment = @idAppointment
 		`;
 
 		const result = await db.query(sql, {
-			id_appointment,
+			idAppointment,
 			userID,
 			doctorID: doctorID || null,
 			serviceID: serviceID || null,
@@ -112,11 +117,11 @@ async function editAppointmentAdmin(id_appointment, userID, doctorID, serviceID,
 
 		if (result.rowsAffected[0] === 0) {
 		}
-		return { id_appointment, message: 'Appointment updated successfully' };
+		return { idAppointment, message: 'Appointment updated successfully' };
 	} catch (error) {
 		console.error('Erro ao atualizar appointment:', error);
 		throw error;
 	}
 }
 
-export default { listByUser, createAppointment, deleteAppointment, listById, editAppointmentAdmin };
+export default { listAppointmentsByUser, createAppointment, cancelAppointment, getAppointmentDetails, editAppointmentAdmin };

@@ -1,4 +1,4 @@
-import repositoryDoctor from "../repositories/repository.doctor.js";
+import repositoryDoctor from '../repositories/repository.doctor.js';
 
 async function listDoctors(name) {
 	const doctors = await repositoryDoctor.getDoctors(name);
@@ -10,24 +10,24 @@ async function createDoctor(name, specialty, icon) {
 	return doctor;
 }
 
-async function deleteDoctor(doctorID) {
-	const result = await repositoryDoctor.deleteDoctor(doctorID);
+async function deleteDoctor(idDoctor) {
+	const result = await repositoryDoctor.deleteDoctor(idDoctor);
 
 	if (!result) {
-        throw new Error(`Doctor with ID ${doctorID} not found`);
-    }
-	
-    return { message: `Doctor with ID ${doctorID} was successfully deleted` };
+		throw new Error(`Doctor with ID ${idDoctor} not found`);
+	}
+
+	return { message: `Doctor with ID ${idDoctor} was successfully deleted` };
 }
 
-async function updateDoctor(doctorID, name, specialty, icon){
-	const result = await repositoryDoctor.updateDoctor(doctorID, name, specialty, icon);
+async function updateDoctor(idDoctor, name, specialty, icon) {
+	const result = await repositoryDoctor.updateDoctor(idDoctor, name, specialty, icon);
 	return result;
 }
 
-async function listDoctorsServices(id_doctor) {
-	const services = await repositoryDoctor.listDoctorsServices(id_doctor);
+async function getDoctorServices(idDoctor) {
+	const services = await repositoryDoctor.getDoctorServices(idDoctor);
 	return services;
 }
 
-export default { listDoctors, createDoctor, deleteDoctor, updateDoctor, listDoctorsServices };
+export default { listDoctors, createDoctor, deleteDoctor, updateDoctor, getDoctorServices };

@@ -18,20 +18,20 @@ async function getDoctors(name) {
 	}
 }
 
-async function deleteDoctor(doctorID) {
+async function deleteDoctor(idDoctor) {
 	try {
-		if (!doctorID) {
+		if (!idDoctor) {
 			throw new Error('Doctor ID must be provided');
 		}
 
 		const sql = 'DELETE FROM Doctors WHERE id_doctor = @id';
-		const result = await db.query(sql, { id: doctorID });
+		const result = await db.query(sql, { id: idDoctor });
 
 		if (result.rowsAffected[0] === 0) {
 			return null;
 		}
 
-		return { doctorID };
+		return { idDoctor };
 	} catch (error) {
 		console.log('Erro ao executar a consulta delete doctor: ', error);
 		throw error;
@@ -57,9 +57,9 @@ async function createDoctor(name, specialty, icon) {
 	}
 }
 
-async function updateDoctor(doctorID, name, specialty, icon) {
+async function updateDoctor(idDoctor, name, specialty, icon) {
 	try {
-		if (!doctorID) {
+		if (!idDoctor) {
 			throw new Error('Doctor ID must be provided');
 		}
 
@@ -69,7 +69,7 @@ async function updateDoctor(doctorID, name, specialty, icon) {
             WHERE id_doctor = @id
         `;
 		const result = await db.query(sql, {
-			id: doctorID,
+			id: idDoctor,
 			name: name || '',
 			specialty: specialty || '',
 			icon: icon || '',
@@ -79,14 +79,14 @@ async function updateDoctor(doctorID, name, specialty, icon) {
 			return null;
 		}
 
-		return { doctorID, message: 'Doctor updated successfully' };
+		return { idDoctor, message: 'Doctor updated successfully' };
 	} catch (error) {
 		console.log('Erro ao executar a consulta update doctor: ', error);
 		throw error;
 	}
 }
 
-async function listDoctorsServices(id_doctor) {
+async function getDoctorServices(idDoctor) {
 	const sql = `SELECT d.id_service, s.description, d.price
                 FROM Doctors_Services as d
                 JOIN Services AS s ON d.id_service = s.id_service
@@ -94,12 +94,12 @@ async function listDoctorsServices(id_doctor) {
                 ORDER BY s.description`;
 
 	try {
-		const services = await db.query(sql, { id: id_doctor });
-		return services.recordset[0];
+		const services = await db.query(sql, { id: idDoctor });
+		return services.recordset;
 	} catch (error) {
 		console.log('Erro ao obter serviços: ', error);
 		throw error;
 	}
 }
 
-export default { getDoctors, createDoctor, deleteDoctor, updateDoctor, listDoctorsServices };
+export default { getDoctors, createDoctor, deleteDoctor, updateDoctor, getDoctorServices };

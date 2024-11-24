@@ -2,9 +2,9 @@ import bcrypt from 'bcrypt';
 import repositoryAdmin from '../repositories/repository.admin.js';
 import jwt from '../token.js';
 
-async function createUserAdmin(name, email, password) {
+async function createAdmin(name, email, password) {
 	const hashPassword = await bcrypt.hash(password, 10);
-	const user = await repositoryAdmin.createUserAdmin(name, email, hashPassword);
+	const user = await repositoryAdmin.createAdmin(name, email, hashPassword);
 
 	user.token = jwt.createToken(user.id_user);
 
@@ -34,22 +34,22 @@ async function loginAdmin(email, password) {
 	}
 }
 
-async function listAppointments() {
+async function listAllAppointments() {
 	try {
-		return await repositoryAdmin.listAppointments();
+		return await repositoryAdmin.listAllAppointments();
 	} catch (error) {
 		console.error('Erro no serviço de agendamentos:', error);
 		throw new Error('Erro ao processar a listagem de agendamentos.');
 	}
 }
 
-async function listUsers() {
+async function listAllUsers() {
 	try {
-		return await repositoryAdmin.listUsers();
+		return await repositoryAdmin.listAllUsers();
 	} catch (error) {
 		console.error('Erro:', error);
 		throw new Error('Erro ao processar a listagem de usuários.');
 	}
 }
 
-export default { createUserAdmin, loginAdmin, listAppointments, listUsers };
+export default { createAdmin, loginAdmin, listAllAppointments, listAllUsers };
