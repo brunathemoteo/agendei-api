@@ -1,132 +1,47 @@
-# Agendei API
-Sistema para agendamento de consultas médicas
 
----
+<h1 align="center" style="font-weight: bold">agendei-api </h1>
+
+## Descrição 
+
+Sistema para agendamento de consultas médicas.
 
 ## **Autenticação**
+
 A maioria das rotas exige autenticação via **JWT**. Os tokens devem ser enviados no cabeçalho da requisição:
 
 ```http
 Authorization: Bearer <seu_token_jwt>
 ```
-## **Endpoints**
 
-### **1. Doctors (Médicos)**
+## Endpoints 📌
 
-#### **Listar todos os médicos**
+A seguir estão as rotas da aplicação (a maioria só pode ser acessada com a validação do token jwt, além das rotas privadas, que apenas gerentes podem acessar):
 
--   **Rota**: `GET /doctors`
--   **Descrição**: Retorna uma lista de todos os médicos cadastrados.
--   **Autenticação**: Sim (JWT)
+### Usuário
 
-#### **Cadastrar médico**
+- **GET** `/users/:me`: retorna os dados do usuário logado
+- **POST** `/users/register`: cria um novo usuário
+- **POST** `/users/login`: usuário faz o login
 
--   **Rota**: `POST /doctors`
--   **Descrição**: Cadastra um novo médico no sistema (Somente Admins).
--   **Autenticação**: Sim (JWT)
--   **Parâmetros no Body**:
-```    
-{
-  "name": "Dr. João Silva",
-  "specialty": "Cardiologia",
-  "email": "joao.silva@example.com"
-}
-```
+### Médicos
 
-#### **Atualizar médico**
+- **GET** `/doctors`: lista todos os médicos cadastrados
+- **POST** `/doctors`: cadastra novo médico no sistema
+- **PUT** `/doctors/:idDoctor`: atualiza as informações do médico
+- **GET** `/doctors/:idDoctor/services`: lista de serviços prestados pelo médico
+- **DELETE** `/doctors/:idDoctor`: deleta um médico
 
--   **Rota**: `PUT /doctors/:idDoctor`
--   **Descrição**: Atualiza as informações de um médico específico (Somente Admins).
--   **Autenticação**: Sim (JWT)
--   **Parâmetros na URL**:
-    -   `idDoctor`: ID do médico.
--   **Parâmetros no Body**:
-```
- {
-  "name": "Dr. João Silva",
-  "specialty": "Cardiologia"
-}
-```
-#### **Excluir  médico**
+### Agendamentos
 
--   **Rota**: `DELETE /doctors/:idDoctor`
--   **Descrição**: Remove um médico do sistema (Somente Admins).
--   **Autenticação**: Sim (JWT)
--   **Parâmetros na URL**:
-    -   `idDoctor`: ID do médico.
-#### **Listar serviços de um médico**
+- **GET** `/appointments`: lista todos os agendamentos feitos pelo usuário
+- **POST** `/appointments`: cria um novo agendamento
+- **DELETE** `/appointments/:idAppointment/cancel`: deleta um agendamento
 
--   **Rota**: `GET /doctors/:idDoctor/services`
--   **Descrição**: Retorna uma lista de serviços prestados por um médico específico.
--   **Autenticação**: Sim (JWT)
--   **Parâmetros na URL**:
-    -   `idDoctor`: ID do médico.
+### Administradores
 
-### **2. Users (Usuários)**
-
-#### **Registrar um usuário**
-
--   **Rota**: `POST /user/register`
--   **Descrição**: Cadastra um novo usuário no sistema.
--   **Autenticação**: Não.
--   **Parâmetros no Body**:
-``` 
-{
-  "name": "Maria Oliveira",
-  "email": "maria.oliveira@example.com",
-  "password": "senha123"
-}
-```
-----------
-
-#### **Login de usuário**
-
--   **Rota**: `POST /users/login`
--   **Descrição**: Realiza o login de um usuário.
--   **Autenticação**: Não.
--   **Parâmetros no Body**:
-```
-{
-   "email": "maria.oliveira@example.com",
-   "password": "senha123"
-}
-```
-----------
-#### **Perfil do usuário**
-
--   **Rota**: `GET /users/me`
--   **Descrição**: Retorna os dados do perfil do usuário autenticado.
--   **Autenticação**: Sim (JWT)
-----------
-
-### **3. Appointments (Agendamentos)**
-
-#### **Listar agendamentos do usuário**
-
--   **Rota**: `GET /appointments`
--   **Descrição**: Retorna os agendamentos feitos pelo usuário autenticado.
--   **Autenticação**: Sim (JWT)
-----------
-#### **Criar um agendamento**
-
--   **Rota**: `POST /appointments`
--   **Descrição**: Cria um novo agendamento.
--   **Autenticação**: Sim (JWT)
--   **Parâmetros no Body**:
-```
-{ 	
-	"idDoctor": 1, 
-	"date": "2024-11-30" 
-}
-```
-----------
-#### **Cancelar um agendamento**
-
--   **Rota**: `DELETE /appointments/:idAppointment/cancel`
--   **Descrição**: Cancela um agendamento específico.
--   **Autenticação**: Sim (JWT)
--   **Parâmetros na URL**:
-    -   `idAppointment`: ID do agendamento.
-
-
-
+- **POST** `/admin/register`: cadastra novo administrador
+- **POST** `/admin/login`: login do administrador
+- **GET** `/admin/appointments`: lista todos os agendamentos
+- **GET** `/admin/appointments/:idAppointment`: lista um agendamento buscando pelo id
+- **POST** `/admin/appointments`: cria um novo agendamento
+- **PUT** `/admin/appointments/:idAppointment`: atualiza as informações de um alimento.
