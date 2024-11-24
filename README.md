@@ -15,8 +15,6 @@ Authorization: Bearer <seu_token_jwt>
 
 ## Endpoints 📌
 
-A seguir estão as rotas da aplicação (a maioria só pode ser acessada com a validação do token jwt, além das rotas privadas, que apenas gerentes podem acessar):
-
 ### Usuário
 
 - **GET** `/users/:me`: retorna os dados do usuário logado
