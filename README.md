@@ -42,4 +42,4 @@ Authorization: Bearer <seu_token_jwt>
 - **GET** `/admin/appointments`: lista todos os agendamentos
 - **GET** `/admin/appointments/:idAppointment`: lista um agendamento buscando pelo id
 - **POST** `/admin/appointments`: cria um novo agendamento
-- **PUT** `/admin/appointments/:idAppointment`: atualiza as informações de um alimento.
+- **PUT** `/admin/appointments/:idAppointment`: atualiza as informações de um agendamento
