@@ -33,15 +33,21 @@ async function loginAdmin(req, res) {
 
 async function listAllAppointments(req, res) {
 	try {
-		const page = Number.parseInt(req.query.page) || 1;
-		const limit = Number.parseInt(req.query.limit) || 10;
+		const { page, limit, startDate, endDate, doctorId } = req.query;
 
-		const appointments = await serviceAdmin.listAllAppointments(page, limit);
+		const filters = {
+			page: Number(page) || 1,
+			limit: Number(limit) || 10,
+			startDate: startDate || null,
+			endDate: endDate || null,
+			doctorId: doctorId ? Number(doctorId) : null,
+		};
 
-		res.status(200).json(appointments);
+		const result = await serviceAdmin.listAllAppointments(filters);
+		return res.status(200).json(result);
 	} catch (error) {
 		console.error('Erro ao listar agendamentos:', error);
-		res.status(500).json({ message: 'An error occurred' });
+		return res.status(500).json({ error: 'Erro ao listar agendamentos' });
 	}
 }
 
