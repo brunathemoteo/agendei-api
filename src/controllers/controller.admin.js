@@ -33,7 +33,11 @@ async function loginAdmin(req, res) {
 
 async function listAllAppointments(req, res) {
 	try {
-		const appointments = await serviceAdmin.listAllAppointments();
+		const page = Number.parseInt(req.query.page) || 1;
+		const limit = Number.parseInt(req.query.limit) || 10;
+
+		const appointments = await serviceAdmin.listAllAppointments(page, limit);
+
 		res.status(200).json(appointments);
 	} catch (error) {
 		console.error('Erro ao listar agendamentos:', error);

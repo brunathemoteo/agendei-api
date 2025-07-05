@@ -34,9 +34,9 @@ async function loginAdmin(email, password) {
 	}
 }
 
-async function listAllAppointments() {
+async function listAllAppointments(page, limit) {
 	try {
-		return await repositoryAdmin.listAllAppointments();
+		return await repositoryAdmin.listAllAppointments(page, limit);
 	} catch (error) {
 		console.error('Erro no serviço de agendamentos:', error);
 		throw new Error('Erro ao processar a listagem de agendamentos.');

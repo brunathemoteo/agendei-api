@@ -41,26 +41,39 @@ async function findUserByEmailAdmin(email) {
 	return result.recordset.length > 0 ? result.recordset[0] : null;
 }
 
-async function listAllAppointments() {
-	const sql = `SELECT a.id_appointment, 
-                        s.description AS service, 
-                        d.name AS doctor, 
-                        d.specialty, 
-                        a.booking_date, 
-                        a.booking_hour, 
-                        u.name, 
-                        ds.price
-                    FROM Appointments AS a
-                JOIN Services AS s ON (s.id_service = a.id_service)
-                JOIN Doctors AS d ON (d.id_doctor = a.id_doctor)
-                JOIN Users AS u ON (u.id_user = a.id_user)
-                JOIN Doctors_Services as ds on (ds.id_doctor = a.id_doctor and ds.id_service = a.id_service)
-				WHERE a.booking_date >= GETDATE()
-                ORDER BY a.booking_date, a.booking_hour`;
+async function listAllAppointments(page = 1, limit = 10) {
+	const offset = (page - 1) * limit;
+
+	const queryData = `
+		SELECT a.id_appointment, s.description AS service, d.name AS doctor, d.specialty,
+		       a.booking_date, a.booking_hour, u.name, ds.price
+		FROM Appointments AS a
+		JOIN Services AS s ON s.id_service = a.id_service
+		JOIN Doctors AS d ON d.id_doctor = a.id_doctor
+		JOIN Users AS u ON u.id_user = a.id_user
+		JOIN Doctors_Services AS ds ON ds.id_doctor = a.id_doctor AND ds.id_service = a.id_service
+		WHERE a.booking_date >= CONVERT(date, GETDATE())
+		ORDER BY a.booking_date, a.booking_hour
+		OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY;
+	`;
+
+	const queryTotal = `
+		SELECT COUNT(*) AS total
+		FROM Appointments AS a
+		WHERE a.booking_date >= CONVERT(date, GETDATE());
+	`;
 
 	try {
-		const appointments = await db.query(sql);
-		return appointments.recordset;
+		const [appointments, totalResult] = await Promise.all([db.query(queryData), db.query(queryTotal)]);
+
+		const total = totalResult.recordset[0].total;
+
+		return {
+			data: appointments.recordset,
+			total,
+			page,
+			limit,
+		};
 	} catch (error) {
 		console.log('Erro ao obter consultas: ', error);
 		throw error;
