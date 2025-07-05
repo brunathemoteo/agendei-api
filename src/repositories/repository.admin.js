@@ -55,6 +55,7 @@ async function listAllAppointments() {
                 JOIN Doctors AS d ON (d.id_doctor = a.id_doctor)
                 JOIN Users AS u ON (u.id_user = a.id_user)
                 JOIN Doctors_Services as ds on (ds.id_doctor = a.id_doctor and ds.id_service = a.id_service)
+				WHERE a.booking_date >= GETDATE()
                 ORDER BY a.booking_date, a.booking_hour`;
 
 	try {

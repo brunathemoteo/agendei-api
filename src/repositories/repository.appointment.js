@@ -14,7 +14,7 @@ async function listAppointmentsByUser(userId) {
                 JOIN Doctors AS d ON (d.id_doctor = a.id_doctor)
                 JOIN Users AS u ON (u.id_user = a.id_user)
                 JOIN Doctors_Services as ds on (ds.id_doctor = a.id_doctor and ds.id_service = a.id_service)
-                    WHERE a.id_user = @id
+                    WHERE CAST(a.booking_date AS DATETIME) + CAST(a.booking_hour AS DATETIME) >= GETDATE()
                 ORDER BY a.booking_date, a.booking_hour`;
 
 	try {
