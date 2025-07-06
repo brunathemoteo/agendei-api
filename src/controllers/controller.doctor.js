@@ -1,9 +1,14 @@
 import serviceDoctor from '../services/service.doctor.js';
 
 async function listDoctors(req, res) {
-	const name = req.query.name;
-	const doctors = await serviceDoctor.listDoctors(name);
-	res.status(200).json(doctors);
+	try {
+		const name = req.query.name?.trim() || null;
+		const doctors = await serviceDoctor.listDoctors(name);
+		res.status(200).json(doctors);
+	} catch (error) {
+		console.error('Erro ao listar médicos', error);
+		return res.status(500).json({ error: 'Erro ao listar médicos' });
+	}
 }
 
 async function createDoctor(req, res) {

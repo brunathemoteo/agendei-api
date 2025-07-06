@@ -1,16 +1,18 @@
 import db from '../database/db.js';
 
 async function getDoctors(name) {
-	let sql = 'SELECT * FROM doctors ';
+	let sql = 'SELECT * FROM doctors';
+	const params = {};
 
 	if (name) {
-		sql += 'WHERE name LIKE @name ';
+		sql += ' WHERE name LIKE @name';
+		params.name = `%${name}%`;
 	}
 
-	sql += 'ORDER BY name';
+	sql += ' ORDER BY name';
 
 	try {
-		const doctors = await db.query(sql, { name: `%${name}%` });
+		const doctors = await db.query(sql, params);
 		return doctors.recordset;
 	} catch (error) {
 		console.log('Erro ao obter médicos: ', error);

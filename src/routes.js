@@ -8,7 +8,7 @@ import jwt from './token.js';
 const router = Router();
 
 // Doctors
-router.get('/doctors', jwt.validateToken, controllerDoctor.listDoctors);
+router.get('/doctors', controllerDoctor.listDoctors);
 router.post('/doctors', jwt.validateToken, controllerDoctor.createDoctor);
 router.put('/doctors/:idDoctor', jwt.validateToken, controllerDoctor.updateDoctor);
 router.delete('/doctors/:idDoctor', jwt.validateToken, controllerDoctor.deleteDoctor);
